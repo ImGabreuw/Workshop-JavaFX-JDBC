@@ -10,13 +10,19 @@ import java.io.IOException;
 
 public class MainApplication extends Application {
 
+    private static Scene mainScene;
+
+    public static Scene getMainScene() {
+        return mainScene;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/MainView.fxml"));
 
             ScrollPane scrollPane = loader.load();
-            Scene mainScene = new Scene(scrollPane);
+            mainScene = new Scene(scrollPane);
 
             //Ajustar o 'scrollPane' à janela
             scrollPane.setFitToHeight(true);
