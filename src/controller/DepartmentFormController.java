@@ -13,14 +13,19 @@ import model.services.DepartmentService;
 import util.Alerts;
 import util.Constraints;
 import util.Utils;
+import view.listeners.DataChangeListener;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class DepartmentFormController implements Initializable {
 
     private Department department;
     private DepartmentService service;
+
+    private final List<DataChangeListener> DATA_CHANGE_LISTENERS = new ArrayList<>();
 
     @FXML
     private TextField textFieldId;
@@ -46,8 +51,9 @@ public class DepartmentFormController implements Initializable {
         }
 
         try {
-            department = getFormData();
+            department = this.getFormData();
             service.saveOrUpdate(department);
+            this.notifyDataChangeListener();
 
             Utils.currentStage(event).close();
         } catch (DbException e) {
@@ -107,5 +113,14 @@ public class DepartmentFormController implements Initializable {
         );
 
         return department;
+    }
+
+    public void subscribeDataChangeListener(DataChangeListener listener) {
+        this.DATA_CHANGE_LISTENERS.add(listener);
+    }
+
+    private void notifyDataChangeListener() {
+        this.DATA_CHANGE_LISTENERS
+                .forEach(DataChangeListener::onDataChanged);
     }
 }

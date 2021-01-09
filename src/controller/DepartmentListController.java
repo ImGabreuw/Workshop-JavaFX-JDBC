@@ -20,12 +20,13 @@ import model.entities.Department;
 import model.services.DepartmentService;
 import util.Alerts;
 import util.Utils;
+import view.listeners.DataChangeListener;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class DepartmentListController implements Initializable {
+public class DepartmentListController implements Initializable, DataChangeListener {
 
     private DepartmentService service;
 
@@ -62,6 +63,11 @@ public class DepartmentListController implements Initializable {
         this.initializeNodes();
     }
 
+    @Override
+    public void onDataChanged() {
+        this.updateTableView();
+    }
+
     private void initializeNodes() {
         this.tableColumnId.setCellValueFactory(
                 new PropertyValueFactory<>("id")
@@ -94,6 +100,7 @@ public class DepartmentListController implements Initializable {
 
             controller.setDepartment(department);
             controller.setService(new DepartmentService());
+            controller.subscribeDataChangeListener(this);
             controller.updateFormData();
 
             Stage dialogStage = new Stage();
