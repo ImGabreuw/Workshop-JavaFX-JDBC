@@ -24,7 +24,6 @@ public class MainApplication extends Application {
             ScrollPane scrollPane = loader.load();
             mainScene = new Scene(scrollPane);
 
-            //Ajustar o 'scrollPane' à janela
             scrollPane.setFitToHeight(true);
             scrollPane.setFitToWidth(true);
 

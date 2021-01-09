@@ -33,3 +33,6 @@ nbdist/
 
 # properties files
 *.properties
+
+# Intellij IDEA
+.idea
