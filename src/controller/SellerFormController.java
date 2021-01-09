@@ -19,18 +19,17 @@ import util.Utils;
 import view.listeners.DataChangeListener;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
 public class SellerFormController implements Initializable {
 
+    private final List<DataChangeListener> DATA_CHANGE_LISTENERS = new ArrayList<>();
     private Seller seller;
     private SellerService sellerService;
     private DepartmentService departmentService;
-
-    private final List<DataChangeListener> DATA_CHANGE_LISTENERS = new ArrayList<>();
-
     @FXML
     private TextField textFieldId;
     @FXML
@@ -156,7 +155,7 @@ public class SellerFormController implements Initializable {
         ValidationException exception = new ValidationException("Validation error");
 
         seller.setId(
-                Utils.tryToParseToInt(textFieldId.getText())
+                Utils.tryParseToInt(textFieldId.getText())
         );
 
         if (textFieldName.getText() == null || textFieldName.getText().trim().equals("")) {
@@ -164,10 +163,47 @@ public class SellerFormController implements Initializable {
                     "name",
                     "Field can´t be null"
             );
+        } else {
+            seller.setName(
+                    textFieldName.getText()
+            );
         }
-        seller.setName(
-                textFieldName.getText()
-        );
+
+        if (textFieldEmail.getText() == null || textFieldEmail.getText().trim().equals("")) {
+            exception.addError(
+                    "email",
+                    "Field can´t be null"
+            );
+        } else {
+            seller.setEmail(
+                    textFieldEmail.getText()
+            );
+        }
+
+        if (datePickerBirthDate.getValue() == null) {
+            exception.addError(
+                    "birthDate",
+                    "Field can´t be null"
+            );
+        } else {
+            Instant instant = Instant.from(
+                    datePickerBirthDate.getValue().atStartOfDay(ZoneId.systemDefault())
+            );
+            seller.setBirthDate(Date.from(instant));
+        }
+
+        if (textFieldBaseSalary.getText() == null || textFieldBaseSalary.getText().trim().equals("")) {
+            exception.addError(
+                    "baseSalary",
+                    "Field can´t be null"
+            );
+        } else {
+            seller.setBaseSalary(
+                    Utils.tryParseToDouble(textFieldBaseSalary.getText())
+            );
+        }
+
+        seller.setDepartment(comboBoxDepartment.getValue());
 
         if (exception.getERRORS().size() > 0) {
             throw exception;
@@ -200,9 +236,25 @@ public class SellerFormController implements Initializable {
     private void setErrorMessages(Map<String, String> errors) {
         Set<String> fields = errors.keySet();
 
-        if (fields.contains("name")) {
-            labelErrorName.setText(errors.get("name"));
-        }
+        labelErrorName.setText(fields.contains("name") ?
+                errors.get("name") :
+                ""
+        );
+
+        labelErrorEmail.setText(fields.contains("email") ?
+                errors.get("email") :
+                ""
+        );
+
+        labelErrorBaseSalary.setText(fields.contains("baseSalary") ?
+                errors.get("baseSalary") :
+                ""
+        );
+
+        labelErrorBirthDate.setText(fields.contains("birthDate") ?
+                errors.get("birthDate") :
+                ""
+        );
     }
 
     private void initializeComboBoxDepartment() {

@@ -20,9 +20,17 @@ public class Utils {
         return (Stage) ((Node) event.getSource()).getScene().getWindow();
     }
 
-    public static Integer tryToParseToInt(String number) {
+    public static Integer tryParseToInt(String number) {
         try {
             return Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    public static Double tryParseToDouble(String number) {
+        try {
+            return Double.parseDouble(number);
         } catch (NumberFormatException e) {
             return null;
         }

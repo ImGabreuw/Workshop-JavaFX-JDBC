@@ -109,7 +109,7 @@ public class DepartmentFormController implements Initializable {
         ValidationException exception = new ValidationException("Validation error");
 
         department.setId(
-                Utils.tryToParseToInt(textFieldId.getText())
+                Utils.tryParseToInt(textFieldId.getText())
         );
 
         if (textFieldName.getText() == null || textFieldName.getText().trim().equals("")) {
